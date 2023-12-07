@@ -9,9 +9,11 @@ import {init as matomoInit} from '@socialgouv/matomo-next'
 
 import '@/styles/template-data-gouv-to-dsfr/normalizer.css'
 import '@/styles/template-data-gouv-to-dsfr/main-alternate.css'
+import { useBALWidget } from '@/hooks/bal-widget'
 
 const MATOMO_URL = process.env.NEXT_PUBLIC_MATOMO_URL
 const MATOMO_SITE_ID = process.env.NEXT_PUBLIC_MATOMO_SITE_ID
+
 
 const {
   withDsfr,
@@ -25,6 +27,10 @@ export {dsfrDocumentApi}
 
 function MyApp({Component, pageProps}) {
   const {setIsDark} = useIsDark()
+
+  useBALWidget({
+    pages: ['/programme-bal']
+  })
 
   useEffect(() => {
     setIsDark(false)
