@@ -28,9 +28,7 @@ export {dsfrDocumentApi}
 function MyApp({Component, pageProps}) {
   const {setIsDark} = useIsDark()
 
-  useBALWidget({
-    pages: ['/programme-bal']
-  })
+  useBALWidget()
 
   useEffect(() => {
     setIsDark(false)

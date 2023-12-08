@@ -2,8 +2,7 @@ import {useEffect, useRef} from 'react'
 
 const BAL_WIDGET_URL = process.env.NEXT_PUBLIC_BAL_WIDGET_URL
 
-export function useBALWidget(config) {
-    const router = useRouter()
+export function useBALWidget() {
     const balWidgetRootElement = useRef(null)
 
     useEffect(() => {
@@ -20,5 +19,5 @@ export function useBALWidget(config) {
         return () => {
             document.body.removeChild(script)
         }
-    }, [config])
+    }, [])
 }
