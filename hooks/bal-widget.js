@@ -1,20 +1,15 @@
-import {useEffect, useRef} from 'react'
-
-const BAL_WIDGET_URL = process.env.NEXT_PUBLIC_BAL_WIDGET_URL
+import {useEffect} from 'react'
 
 export function useBALWidget() {
-    const balWidgetRootElement = useRef(null)
-
     useEffect(() => {
+        if (!process.env.NEXT_PUBLIC_BAL_WIDGET_URL) {
+            return
+        }
         const script = document.createElement('script')
-        script.src = `${BAL_WIDGET_URL}/bal-widget.js`
+        script.src = `${process.env.NEXT_PUBLIC_BAL_WIDGET_URL}/bal-widget.js`
         script.async = true
         script.defer = true
         document.body.appendChild(script)
-
-        script.onload = () => {
-            balWidgetRootElement.current = document.getElementById('bal-widget')
-        }
 
         return () => {
             document.body.removeChild(script)
