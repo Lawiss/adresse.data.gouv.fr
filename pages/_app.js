@@ -9,10 +9,11 @@ import {init as matomoInit} from '@socialgouv/matomo-next'
 
 import '@/styles/template-data-gouv-to-dsfr/normalizer.css'
 import '@/styles/template-data-gouv-to-dsfr/main-alternate.css'
-import { useBALWidget } from '@/hooks/bal-widget'
+import Script from 'next/script'
 
 const MATOMO_URL = process.env.NEXT_PUBLIC_MATOMO_URL
 const MATOMO_SITE_ID = process.env.NEXT_PUBLIC_MATOMO_SITE_ID
+const BAL_WIDGET_URL = process.env.NEXT_PUBLIC_BAL_WIDGET_URL
 
 const {
   withDsfr,
@@ -26,8 +27,6 @@ export {dsfrDocumentApi}
 
 function MyApp({Component, pageProps}) {
   const {setIsDark} = useIsDark()
-
-  useBALWidget()
 
   useEffect(() => {
     setIsDark(false)
@@ -46,6 +45,8 @@ function MyApp({Component, pageProps}) {
         <div id='alert-root' />
         <Component {...pageProps} />
       </DeviceContextProvider>
+      {BAL_WIDGET_URL && (
+        <Script src={`${BAL_WIDGET_URL}/bal-widget.js`} strategy='lazyOnload' />)}
       <style global jsx>{`
         body,
         html,
