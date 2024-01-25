@@ -6,14 +6,13 @@ import {createNextDsfrIntegrationApi} from '@codegouvfr/react-dsfr/next-pagesdir
 import {useIsDark} from '@codegouvfr/react-dsfr/useIsDark'
 import {DeviceContextProvider} from '@/contexts/device'
 import {init as matomoInit} from '@socialgouv/matomo-next'
+import BALWidget from '@/components/bal-widget/bal-widget'
 
 import '@/styles/template-data-gouv-to-dsfr/normalizer.css'
 import '@/styles/template-data-gouv-to-dsfr/main-alternate.css'
-import Script from 'next/script'
 
 const MATOMO_URL = process.env.NEXT_PUBLIC_MATOMO_URL
 const MATOMO_SITE_ID = process.env.NEXT_PUBLIC_MATOMO_SITE_ID
-const BAL_WIDGET_URL = process.env.NEXT_PUBLIC_BAL_WIDGET_URL
 
 const {
   withDsfr,
@@ -44,9 +43,8 @@ function MyApp({Component, pageProps}) {
       <DeviceContextProvider>
         <div id='alert-root' />
         <Component {...pageProps} />
+        <BALWidget />
       </DeviceContextProvider>
-      {BAL_WIDGET_URL && (
-        <Script src={`${BAL_WIDGET_URL}/bal-widget.js`} strategy='lazyOnload' />)}
       <style global jsx>{`
         body,
         html,
