@@ -1,4 +1,4 @@
-import {useState, useEffect, useMemo} from 'react'
+import {useState, useEffect, useMemo, useRef} from 'react'
 import {useRouter} from 'next/router'
 import {push as matomoPush} from '@socialgouv/matomo-next'
 import getConfig from 'next/config'
@@ -12,7 +12,9 @@ const {isDevMode} = getConfig().publicRuntimeConfig
 const matomoCategoryName = `${isDevMode ? 'DEVMODE - ' : ''}BAL Widget (Front)`
 
 function BALWidget() {
+  const balWidgetRef = useRef(null)
   const [isBalWidgetOpen, setIsBalWidgetOpen] = useState(false)
+  const [isBalWidgetReady, setIsBalWidgetReady] = useState(false)
   const [balWidgetConfig, setBalWidgetConfig] = useState(null)
   const router = useRouter()
 
@@ -35,6 +37,20 @@ function BALWidget() {
     fetchBalWidgetConfig()
   }, [])
 
+  // Send config to BAL widget
+  // once it's ready
+  useEffect(() => {
+    if (balWidgetRef.current && isBalWidgetReady) {
+      balWidgetRef.current.contentWindow.postMessage(
+        {
+          type: 'BAL_WIDGET_CONFIG',
+          content: balWidgetConfig,
+        },
+        '*'
+      )
+    }
+  }, [isBalWidgetReady, balWidgetRef, balWidgetConfig])
+
   useEffect(() => {
     function BALWidgetMessageHandler(event) {
       switch (event.data?.type) {
@@ -53,6 +69,9 @@ function BALWidget() {
             matomoPush(['trackEvent', matomoCategoryName, 'Location changed', event.data.content, 1])
           }
 
+          break
+        case 'BAL_WIDGET_READY':
+          setIsBalWidgetReady(true)
           break
         default:
           break
@@ -80,6 +99,7 @@ function BALWidget() {
 
   return isWidgetDisplayed ? (
     <iframe
+      ref={balWidgetRef}
       src={BAL_WIDGET_URL}
       width={isBalWidgetOpen ? 450 : 60}
       height={isBalWidgetOpen ? 800 : 60}
